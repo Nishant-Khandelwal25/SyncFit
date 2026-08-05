@@ -1,15 +1,54 @@
+# ---------- Gradle / Kotlin build output ----------
+# Covers app/, core-*/, feature-*/, wear/, and any new module automatically
+**/build/
+.gradle/
+.kotlin/
+out/
+
+# ---------- Android Studio / IntelliJ ----------
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+captures/
+.navigation/
+.externalNativeBuild/
+.cxx/
 local.properties
+
+# ---------- Signing & secrets — NEVER commit these ----------
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+google-services.json
+.env
+.env.*
+
+# ---------- Build artifacts ----------
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# ---------- Test / coverage reports ----------
+**/build/reports/
+**/build/test-results/
+**/kover/
+
+# ---------- Ktor backend module ----------
+backend/build/
+backend/.env
+backend/logs/
+*.log
+
+# ---------- IDE, if backend is edited in VS Code ----------
+.vscode/
+
+# ---------- OS junk ----------
+.DS_Store
+Thumbs.db
+
+# ---------- Fastlane (only if you add store metadata/screenshots automation) ----------
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
