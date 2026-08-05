@@ -1,4 +1,4 @@
-package com.example.syncfit.ui.theme
+package com.example.syncfit_core.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme

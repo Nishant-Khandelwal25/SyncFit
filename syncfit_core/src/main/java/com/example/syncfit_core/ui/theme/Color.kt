@@ -1,4 +1,4 @@
-package com.example.syncfit.ui.theme
+package com.example.syncfit_core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
