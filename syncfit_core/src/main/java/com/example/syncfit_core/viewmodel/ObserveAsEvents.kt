@@ -1,4 +1,4 @@
-package com.example.syncfit_core.ui
+package com.example.syncfit_core.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

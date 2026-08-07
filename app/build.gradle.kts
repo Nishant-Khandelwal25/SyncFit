@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.pulsesync"
+        applicationId = "com.example.syncfit"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

@@ -20,7 +20,7 @@ data class ExtendedColors(
     val surfaceVariant2: Color
 )
 
-// Fallback only — PulseSyncTheme always provides a real value explicitly.
+// Fallback only — SyncFitTheme always provides a real value explicitly.
 val LocalExtendedColors = staticCompositionLocalOf {
     ExtendedColors(
         success = PulseGreen,
