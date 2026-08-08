@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_to">Welcome to</string>
+    <string name="syncfit">SyncFit</string>
+    <string name="onboarding_description">Your AI-powered fitness companion</string>
+    <string-array name="onboarding_items">
+        <item>AI form analysis in real time</item>
+        <item>Personalized recovery insights</item>
+        <item>Train smarter. Recover better.</item>
+    </string-array>
+    <string name="get_started_button">Get Started</string>
+</resources>

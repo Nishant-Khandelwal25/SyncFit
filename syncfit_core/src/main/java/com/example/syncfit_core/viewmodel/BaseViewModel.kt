@@ -29,7 +29,7 @@ abstract class BaseViewModel<S : UiState, A : UiAction, E : UiEvent>(initialStat
         handleAction(action)
     }
 
-    protected abstract fun handleAction(action: A)
+    abstract fun handleAction(action: A)
 
     protected fun setState(reducer: S.() -> S) {
         _state.update(reducer)
