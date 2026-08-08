@@ -1,4 +1,4 @@
-package com.example.syncfit.navigation
+package com.example.syncfit_core.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
