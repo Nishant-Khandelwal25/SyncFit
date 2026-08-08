@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "SyncFit"
 include(":app")
 include(":syncfit_core")
+include(":features")
