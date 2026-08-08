@@ -8,10 +8,10 @@ val PulseGreenDark = Color(0xFF139C79)   // pressed / container state
 val PulseGreenLight = Color(0xFF6FF0C9)  // highlights, secondary accents
 
 // ---- Surfaces (dark theme — the app's primary/only shipped theme) ----
-val BackgroundDark = Color(0xFF0B1220)       // app background
-val SurfaceDark = Color(0xFF141C2B)          // cards (dashboard stat cards, list containers)
-val SurfaceVariantDark = Color(0xFF1C2636)   // nested rows, list items inside a card
-val SurfaceElevatedDark = Color(0xFF232E42)  // sheets, dialogs, elevated chips/badges
+val BackgroundDark = Color(0xFF0A0E0A)       // app background
+val SurfaceDark = Color(0xFF161B16)          // cards (dashboard stat cards, list containers)
+val SurfaceVariantDark = Color(0xFF222822)   // nested rows, list items inside a card
+val SurfaceElevatedDark = Color(0xFF2E342E)  // sheets, dialogs, elevated chips/badges
 
 // ---- Text (dark theme) ----
 val TextPrimaryDark = Color(0xFFF5F7FA)
@@ -19,7 +19,7 @@ val TextSecondaryDark = Color(0xFF95A1B2)
 val TextTertiaryDark = Color(0xFF5D6B80)
 
 // ---- Borders / dividers ----
-val BorderDark = Color(0xFF26303F)
+val BorderDark = Color(0xFF323832)
 
 // ---- Status ----
 val StatusWarning = Color(0xFFF5A623)

@@ -5,10 +5,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SyncFitStorageLocalRepositoryImpl(
+class SyncFitStorageLocalRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) :
     SyncFitStorageLocalRepository {
