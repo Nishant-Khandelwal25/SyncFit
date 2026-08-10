@@ -78,14 +78,16 @@ fun SyncFitCard(
 
             Column(
                 modifier = Modifier
-                    .padding(top = Spacing.md, start = Spacing.md)
-                    .fillMaxWidth()
+                    .padding(top = Spacing.md, start = Spacing.md, end = Spacing.md)
                     .weight(1f),
             ) {
                 SyncFitText(text = titleText, textStyle = titleTextStyle, textColor = titleColor)
 
                 SyncFitText(
-                    modifier = Modifier.padding(vertical = Spacing.sm),
+                    modifier = if (bodyText2.isNullOrBlank()) Modifier.padding(
+                        top = Spacing.sm,
+                        bottom = Spacing.md,
+                    ) else Modifier.padding(vertical = Spacing.sm),
                     text = bodyText1,
                     textStyle = bodyText1Style,
                     textColor = bodyText1Color,
