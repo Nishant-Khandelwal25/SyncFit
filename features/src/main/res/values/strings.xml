@@ -9,4 +9,7 @@
         <item>Train smarter. Recover better.</item>
     </string-array>
     <string name="get_started_button">Get Started</string>
+    <string name="hi_name">Hi, %1$s</string>
+    <string name="today_plan">Today\'s Plan</string>
+    <string name="quick_insights">Quick Insights</string>
 </resources>

@@ -6,6 +6,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
+import com.example.features.home.ui.HomeScreenRootView
+import com.example.features.home.viewmodel.HomeScreenViewModel
 import com.example.features.onboarding.ui.OnboardingRootView
 import com.example.features.onboarding.viewmodel.OnboardingViewModel
 import com.example.syncfit_core.navigation.Navigator
@@ -23,7 +25,8 @@ import com.example.syncfit_core.navigation.toEntries
 private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKey> = { route ->
     when (route) {
         Routes.Home -> NavEntry(route) {
-
+            val viewModel: HomeScreenViewModel = hiltViewModel()
+            HomeScreenRootView(viewModel)
         }
 
         else -> error("Unknown Route: $route")
