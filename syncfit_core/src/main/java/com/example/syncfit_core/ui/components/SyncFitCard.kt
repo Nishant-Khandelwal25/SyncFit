@@ -1,6 +1,7 @@
 package com.example.syncfit_core.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,15 +21,16 @@ import androidx.compose.ui.unit.Dp
 import com.example.syncfit_core.R
 import com.example.syncfit_core.ui.theme.ChartGreen
 import com.example.syncfit_core.ui.theme.IconSize
-import com.example.syncfit_core.ui.theme.SyncFitTypography
 import com.example.syncfit_core.ui.theme.Spacing
+import com.example.syncfit_core.ui.theme.SurfaceDark
 import com.example.syncfit_core.ui.theme.SyncFitShapes
 import com.example.syncfit_core.ui.theme.SyncFitTheme
+import com.example.syncfit_core.ui.theme.SyncFitTypography
 import com.example.syncfit_core.ui.theme.TextPrimaryDark
 import com.example.syncfit_core.ui.theme.TextSecondaryDark
 
 val defaultCardPaddingValues =
-    PaddingValues(top = Spacing.md, bottom = Spacing.md, start = Spacing.md, end = Spacing.md)
+    PaddingValues(top = Spacing.sm, bottom = Spacing.sm, start = Spacing.sm, end = Spacing.sm)
 
 @Composable
 fun SyncFitCard(
@@ -36,6 +38,7 @@ fun SyncFitCard(
     titleText: String,
     bodyText1: String,
     bodyText2: String? = null,
+    bodyText3: String? = null,
     buttonText: String? = null,
     startIconResId: Int? = null,
     endIconResId: Int? = null,
@@ -45,64 +48,86 @@ fun SyncFitCard(
     titleTextStyle: TextStyle = SyncFitTypography.titleLarge,
     bodyText1Style: TextStyle = SyncFitTypography.bodyLarge,
     bodyText2Style: TextStyle = SyncFitTypography.bodyLarge,
+    bodyText3Style: TextStyle = SyncFitTypography.bodySmall,
     titleColor: Color = TextPrimaryDark,
     bodyText1Color: Color = TextSecondaryDark,
     bodyText2Color: Color = ChartGreen,
+    bodyText3Color: Color = TextSecondaryDark,
     onCardClick: (() -> Unit)? = null,
     onButtonClick: (() -> Unit)? = null,
 ) {
-    Row(
-        modifier
-            .fillMaxWidth()
+    Column(
+        modifier = modifier
             .padding(defaultCardPaddingValues)
             .clip(cardShape)
-            .clickable { onCardClick?.invoke() },
-        verticalAlignment = Alignment.Top,
+            .clickable { onCardClick?.invoke() }
+            .background(SurfaceDark),
     ) {
-        startIconResId?.let {
-            SyncFitResourceImage(
-                resId = it,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+        ) {
+            startIconResId?.let {
+                SyncFitResourceImage(
+                    resId = it,
+                    modifier = Modifier
+                        .padding(top = Spacing.md, start = Spacing.md)
+                        .size(startIconSize),
+                )
+            }
+
+            Column(
                 modifier = Modifier
                     .padding(top = Spacing.md, start = Spacing.md)
-                    .size(startIconSize)
-            )
-        }
+                    .fillMaxWidth()
+                    .weight(1f),
+            ) {
+                SyncFitText(text = titleText, textStyle = titleTextStyle, textColor = titleColor)
 
-        Column(
-            modifier = Modifier
-                .padding(top = Spacing.md, start = Spacing.md)
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            SyncFitText(text = titleText, textStyle = titleTextStyle, textColor = titleColor)
+                SyncFitText(
+                    modifier = Modifier.padding(vertical = Spacing.sm),
+                    text = bodyText1,
+                    textStyle = bodyText1Style,
+                    textColor = bodyText1Color,
+                )
 
-            SyncFitText(
-                modifier = Modifier.padding(vertical = Spacing.sm),
-                text = bodyText1,
-                textStyle = bodyText1Style,
-                textColor = bodyText1Color,
-            )
-
-            bodyText2?.let { SyncFitText(text = it, textStyle = bodyText2Style, textColor = bodyText2Color) }
-
-            buttonText?.let {
-                SyncFitButton(
-                    text = it, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = Spacing.md)
-                ) {
-                    onButtonClick?.invoke()
+                bodyText2?.let {
+                    SyncFitText(
+                        text = it,
+                        textStyle = bodyText2Style,
+                        textColor = bodyText2Color,
+                        modifier = Modifier.padding(bottom = if (bodyText3 == null) Spacing.md else Spacing.xs),
+                    )
                 }
+
+                bodyText3?.let {
+                    SyncFitText(
+                        text = it,
+                        textStyle = bodyText3Style,
+                        textColor = bodyText3Color,
+                        modifier = Modifier.padding(bottom = Spacing.md),
+                    )
+                }
+            }
+
+            val endIconModifier = Modifier
+                .padding(top = Spacing.md, end = Spacing.md)
+                .size(endIconSize)
+            if (endIconResId != null) {
+                SyncFitResourceImage(resId = endIconResId, modifier = endIconModifier)
             }
         }
 
-        endIconResId?.let {
-            SyncFitResourceImage(
-                resId = it,
+        // 3. Button moved outside the Row to take full card width
+        buttonText?.let {
+            SyncFitButton(
+                text = it,
                 modifier = Modifier
-                    .padding(top = Spacing.md, end = Spacing.md)
-                    .size(endIconSize)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.md, vertical = Spacing.md),
+            ) {
+                onButtonClick?.invoke()
+            }
         }
     }
 }
@@ -117,7 +142,7 @@ fun SyncFitCardPreview() {
             startIconResId = R.drawable.sample_account_vector,
             endIconResId = R.drawable.sample_account_vector,
             bodyText2 = "Body Text 2",
-            buttonText = "Some Button Text"
+            buttonText = "Some Button Text",
         )
     }
 }
