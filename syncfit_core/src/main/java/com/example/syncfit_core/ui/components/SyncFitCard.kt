@@ -54,13 +54,12 @@ fun SyncFitCard(
     bodyText2Color: Color = ChartGreen,
     bodyText3Color: Color = TextSecondaryDark,
     onCardClick: (() -> Unit)? = null,
-    onButtonClick: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
             .padding(defaultCardPaddingValues)
             .clip(cardShape)
-            .clickable { onCardClick?.invoke() }
+            .clickable(enabled = onCardClick != null) { onCardClick?.invoke() }
             .background(SurfaceDark),
     ) {
         Row(
@@ -128,7 +127,7 @@ fun SyncFitCard(
                     .fillMaxWidth()
                     .padding(horizontal = Spacing.md, vertical = Spacing.md),
             ) {
-                onButtonClick?.invoke()
+                onCardClick?.invoke()
             }
         }
     }
