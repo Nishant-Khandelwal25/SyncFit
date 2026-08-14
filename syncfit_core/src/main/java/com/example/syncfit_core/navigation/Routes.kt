@@ -10,4 +10,7 @@ sealed interface Routes : NavKey {
 
     @Serializable
     data object Home: Routes
+
+    @Serializable
+    data object AIFormCheck: Routes
 }

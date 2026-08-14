@@ -15,6 +15,7 @@ class SyncFitStorageLocalRepositoryImpl @Inject constructor(
     SyncFitStorageLocalRepository {
     private object Keys {
         val HAS_ONBOARDED = booleanPreferencesKey("has_onboarded")
+        val HAS_ASKED_CAMERA_PERMISSION = booleanPreferencesKey("has_asked_camera_permission")
     }
 
     override suspend fun setUserHasOnboarded(hasOnboarded: Boolean) {
@@ -23,5 +24,13 @@ class SyncFitStorageLocalRepositoryImpl @Inject constructor(
 
     override suspend fun getUserHasOnboarded(): Boolean {
         return dataStore.data.first()[Keys.HAS_ONBOARDED] ?: false
+    }
+
+    override suspend fun setHasRequestedCameraPermission(hasRequested: Boolean) {
+        dataStore.edit { it[Keys.HAS_ASKED_CAMERA_PERMISSION] = hasRequested }
+    }
+
+    override suspend fun getHasRequestedCameraPermission(): Boolean {
+        return dataStore.data.first()[Keys.HAS_ASKED_CAMERA_PERMISSION] ?: false
     }
 }

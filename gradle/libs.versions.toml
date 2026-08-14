@@ -20,6 +20,9 @@ kotlinxSerializationCore = "1.9.0"
 dataStore = "1.2.1"
 datastoreCore = "1.2.1"
 composeNavigation = "1.3.0"
+cameraX = "1.6.1"
+accompanist = "0.37.3"
+cameraView = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +52,12 @@ androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraX" }
+androidx-camera-compose = { group = "androidx.camera", name = "camera-compose", version.ref = "cameraX" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraX" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraX" }
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

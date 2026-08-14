@@ -12,4 +12,8 @@
     <string name="hi_name">Hi, %1$s</string>
     <string name="today_plan">Today\'s Plan</string>
     <string name="quick_insights">Quick Insights</string>
+    <string name="camera_dialog_title">Camera Permission Request</string>
+    <string name="camera_dialog_description">Please open settings and allow camera permission to start AI Form Check</string>
+    <string name="dialog_confirm_button">Settings</string>
+    <string name="dialog_dismiss_button">Dismiss</string>
 </resources>
