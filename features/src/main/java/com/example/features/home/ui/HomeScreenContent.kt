@@ -1,6 +1,12 @@
 package com.example.features.home.ui
 
+import android.Manifest
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,11 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.features.R
 import com.example.features.home.model.HomeScreenData
+import com.example.features.home.viewmodel.HomeScreenUiAction
 import com.example.features.home.viewmodel.HomeScreenUiState
 import com.example.syncfit_core.ui.components.SyncFitCard
 import com.example.syncfit_core.ui.components.SyncFitResourceImage
@@ -25,9 +33,13 @@ import com.example.syncfit_core.ui.theme.Spacing
 import com.example.syncfit_core.ui.theme.SyncFitTheme
 import com.example.syncfit_core.ui.theme.SyncFitTypography
 import com.example.syncfit_core.ui.theme.TextPrimaryDark
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @Composable
-fun HomeScreenContent(state: HomeScreenUiState) {
+fun HomeScreenContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction) -> Unit) {
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -47,7 +59,14 @@ fun HomeScreenContent(state: HomeScreenUiState) {
                 }
             }
         }
-        item { HomeScreenStartWorkOutSection(state.startWorkout) }
+        item {
+            HomeScreenStartWorkOutSection(
+                state.startWorkout,
+                state.cameraPermissionRequested,
+                state.launchSettingsForCameraPermission,
+                onAction,
+            )
+        }
 
         item { HomeScreenQuickInsights(state.quickInsights) }
     }
@@ -100,8 +119,28 @@ fun HomeScreenSleepAndHrvSection(
     )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun HomeScreenStartWorkOutSection(homeScreenData: HomeScreenData) {
+fun HomeScreenStartWorkOutSection(
+    homeScreenData: HomeScreenData,
+    cameraPermissionRequested: Boolean,
+    launchSettings: Boolean,
+    onAction: (HomeScreenUiAction) -> Unit,
+) {
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    val context = LocalContext.current
+
+    val settingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
+    if (launchSettings) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
+        onAction(HomeScreenUiAction.SettingsLaunched)
+        onAction(HomeScreenUiAction.CameraPermissionDialogDismiss)
+        settingsLauncher.launch(intent)
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -117,7 +156,24 @@ fun HomeScreenStartWorkOutSection(homeScreenData: HomeScreenData) {
             endIconResId = R.drawable.arrow_right,
             buttonText = homeScreenData.buttonText,
             endIconSize = IconSize.sm,
-        )
+        ) {
+            when {
+                cameraPermissionState.status.isGranted -> {
+                    onAction(HomeScreenUiAction.OnStartAIFormCheckClick)
+                }
+
+                !cameraPermissionState.status.shouldShowRationale && cameraPermissionRequested -> {
+                    onAction(HomeScreenUiAction.LaunchCameraPermissionDialog)
+                }
+
+                else -> {
+                    onAction(HomeScreenUiAction.CameraPermissionRequested)
+                    cameraPermissionState.launchPermissionRequest()
+
+                }
+
+            }
+        }
     }
 }
 
@@ -131,7 +187,7 @@ fun HomeScreenQuickInsights(homeScreenData: HomeScreenData) {
         SyncFitCard(
             titleText = homeScreenData.featureName,
             bodyText1 = homeScreenData.featureValue,
-            startIconResId = R.drawable.thought
+            startIconResId = R.drawable.thought,
         )
     }
 }
@@ -154,6 +210,6 @@ fun HomeScreenContentPreview() {
                 ),
                 HomeScreenData("Recovery is looking good", "You're ready for a normal intensity workout today."),
             ),
-        )
+        ) {}
     }
 }

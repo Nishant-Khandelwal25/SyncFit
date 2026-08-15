@@ -1,5 +1,7 @@
 package com.example.features.di
 
+import com.example.features.home.usecase.HomeScreenUseCase
+import com.example.features.home.usecase.HomeScreenUseCaseImpl
 import com.example.features.onboarding.usecase.OnBoardingUseCase
 import com.example.features.onboarding.usecase.OnBoardingUseCaseImpl
 import dagger.Binds
@@ -12,4 +14,7 @@ import dagger.hilt.components.SingletonComponent
 interface SyncFitFeaturesUseCaseModule {
     @Binds
     fun bindOnBoardingUseCase(impl: OnBoardingUseCaseImpl): OnBoardingUseCase
+
+    @Binds
+    fun bindHomeScreenUseCase(impl: HomeScreenUseCaseImpl): HomeScreenUseCase
 }
