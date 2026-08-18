@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.accompanist.permissions)
+    implementation(libs.mediapipe.vision)
 
     ksp(libs.android.hilt.compiler)
     testImplementation(libs.junit)

@@ -1,45 +1,65 @@
 package com.example.features.aiformcheck.viewmodel
 
 import android.content.Context
-import androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
-import androidx.camera.core.Preview
-import androidx.camera.core.SurfaceRequest
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.lifecycle.awaitInstance
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
+import com.example.features.aiformcheck.data.camera.CameraController
+import com.example.features.aiformcheck.domain.repository.PoseRepository
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
-class AIFormCheckViewModel @Inject constructor() :
+class AIFormCheckViewModel @Inject constructor(
+    private val cameraController: CameraController,
+    private val poseRepository: PoseRepository,
+) :
     BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
 
-    private val cameraPreviewUseCase = Preview.Builder().build().apply {
-        setSurfaceProvider { newSurfaceRequest ->
-            setState { copy(surfaceRequest = newSurfaceRequest) }
+    init {
+        setupPreview()
+        observePose()
+        observeCamera()
+    }
+
+    private fun observeCamera() {
+        launch {
+            cameraController.frameInfo.collectLatest { frameInfo ->
+                setState { copy(frameInfo = frameInfo) }
+            }
+        }
+    }
+
+    private fun setupPreview() {
+        cameraController.preview.setSurfaceProvider {
+            cameraController.preview.setSurfaceProvider { newSurfaceRequest ->
+                setState { copy(surfaceRequest = newSurfaceRequest) }
+            }
+        }
+    }
+
+    private fun observePose() {
+        launch {
+            poseRepository.poses.collectLatest { pose ->
+                setState { copy(pose = pose, isPoseDetected = pose.landmarks.isNotEmpty()) }
+                Log.d("TAG", "observePose: ${pose.landmarks}")
+                Log.d("TAG", "observePose3D: ${pose.worldLandmarks}")
+            }
         }
     }
 
     suspend fun bindToCamera(applicationContext: Context, lifecycleOwner: LifecycleOwner) {
-        val processCameraProvider = ProcessCameraProvider.awaitInstance(applicationContext)
-        processCameraProvider.bindToLifecycle(lifecycleOwner, DEFAULT_BACK_CAMERA, cameraPreviewUseCase)
-
-        try {
-            awaitCancellation()
-        } finally {
-            processCameraProvider.unbindAll()
-        }
+        cameraController.bind(applicationContext, lifecycleOwner)
     }
 
     override fun handleAction(action: AIFormCheckUiAction) {
 
+    }
+
+    override fun onCleared() {
+        cameraController.close()
+        super.onCleared()
     }
 
 }

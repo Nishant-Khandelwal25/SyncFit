@@ -1,6 +1,7 @@
 package com.example.features.aiformcheck.ui
 
 import androidx.camera.compose.CameraXViewfinder
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +20,14 @@ fun AIFormCheckRootView(viewModel: AIFormCheckViewModel) {
     LaunchedEffect(lifecycleOwner) {
         viewModel.bindToCamera(context, lifecycleOwner)
     }
-    state.surfaceRequest?.let {
-        CameraXViewfinder(it, Modifier.fillMaxSize())
+    Box(Modifier.fillMaxSize()) {
+        state.surfaceRequest?.let {
+            CameraXViewfinder(it, Modifier.fillMaxSize())
+        }
+        PoseOverlay(
+            pose = state.pose,
+            state.frameInfo,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
