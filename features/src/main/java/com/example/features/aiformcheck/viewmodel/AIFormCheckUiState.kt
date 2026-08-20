@@ -2,6 +2,7 @@ package com.example.features.aiformcheck.viewmodel
 
 import androidx.camera.core.SurfaceRequest
 import com.example.features.aiformcheck.data.camera.CameraFrameInfo
+import com.example.features.aiformcheck.data.exercise.SquatResult
 import com.example.features.aiformcheck.domain.model.Pose
 import com.example.syncfit_core.viewmodel.UiState
 
@@ -11,4 +12,5 @@ data class AIFormCheckUiState(
     val isPoseDetected: Boolean = false,
     val error: String? = null,
     val frameInfo: CameraFrameInfo? = null,
+    val squatResult: SquatResult? = null,
 ) : UiState
