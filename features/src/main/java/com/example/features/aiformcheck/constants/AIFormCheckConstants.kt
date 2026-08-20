@@ -1,0 +1,35 @@
+package com.example.features.aiformcheck.constants
+
+internal const val NOSE = 0
+internal const val LEFT_EYE_INNER = 1
+internal const val LEFT_EYE = 2
+internal const val LEFT_EYE_OUTER = 3
+internal const val RIGHT_EYE_INNER = 4
+internal const val RIGHT_EYE = 5
+internal const val RIGHT_EYE_OUTER = 6
+internal const val LEFT_EAR = 7
+internal const val RIGHT_EAR = 8
+internal const val MOUTH_LEFT = 9
+internal const val MOUTH_RIGHT = 10
+internal const val LEFT_SHOULDER = 11
+internal const val RIGHT_SHOULDER = 12
+internal const val LEFT_ELBOW = 13
+internal const val RIGHT_ELBOW = 14
+internal const val LEFT_WRIST = 15
+internal const val RIGHT_WRIST = 16
+internal const val LEFT_PINKY = 17
+internal const val RIGHT_PINKY = 18
+internal const val LEFT_INDEX = 19
+internal const val RIGHT_INDEX = 20
+internal const val LEFT_THUMB = 21
+internal const val RIGHT_THUMB = 22
+internal const val LEFT_HIP = 23
+internal const val RIGHT_HIP = 24
+internal const val LEFT_KNEE = 25
+internal const val RIGHT_KNEE = 26
+internal const val LEFT_ANKLE = 27
+internal const val RIGHT_ANKLE = 28
+internal const val LEFT_HEEL = 29
+internal const val RIGHT_HEEL = 30
+internal const val LEFT_FOOT_INDEX = 31
+internal const val RIGHT_FOOT_INDEX = 32

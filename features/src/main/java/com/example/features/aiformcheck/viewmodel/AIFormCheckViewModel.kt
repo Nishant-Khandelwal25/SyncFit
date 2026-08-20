@@ -1,9 +1,9 @@
 package com.example.features.aiformcheck.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.example.features.aiformcheck.data.camera.CameraController
+import com.example.features.aiformcheck.domain.exercise.SquatAnalyzer
 import com.example.features.aiformcheck.domain.repository.PoseRepository
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +14,7 @@ import javax.inject.Inject
 class AIFormCheckViewModel @Inject constructor(
     private val cameraController: CameraController,
     private val poseRepository: PoseRepository,
+    private val squatAnalyzer: SquatAnalyzer,
 ) :
     BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
 
@@ -42,9 +43,14 @@ class AIFormCheckViewModel @Inject constructor(
     private fun observePose() {
         launch {
             poseRepository.poses.collectLatest { pose ->
-                setState { copy(pose = pose, isPoseDetected = pose.landmarks.isNotEmpty()) }
-                Log.d("TAG", "observePose: ${pose.landmarks}")
-                Log.d("TAG", "observePose3D: ${pose.worldLandmarks}")
+                val squatResult = squatAnalyzer.process(pose)
+                setState {
+                    copy(
+                        pose = pose,
+                        isPoseDetected = pose.landmarks.isNotEmpty(),
+                        squatResult = squatResult,
+                    )
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.features.aiformcheck.ui
 
+import android.util.Log
 import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,4 +31,6 @@ fun AIFormCheckRootView(viewModel: AIFormCheckViewModel) {
             modifier = Modifier.fillMaxSize(),
         )
     }
+
+    Log.d("TAG", "AIFormCheckRootView Count:${state.squatResult?.reps} ")
 }
