@@ -7,7 +7,10 @@ import com.example.features.aiformcheck.domain.exercise.SquatAnalyzer
 import com.example.features.aiformcheck.domain.repository.PoseRepository
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +20,12 @@ class AIFormCheckViewModel @Inject constructor(
     private val squatAnalyzer: SquatAnalyzer,
 ) :
     BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
+
+    private val _shouldStartCountingReps =
+        MutableStateFlow(false)
+
+    val shouldStartCountingReps =
+        _shouldStartCountingReps.asStateFlow()
 
     init {
         setupPreview()
@@ -42,14 +51,22 @@ class AIFormCheckViewModel @Inject constructor(
 
     private fun observePose() {
         launch {
-            poseRepository.poses.collectLatest { pose ->
-                val squatResult = squatAnalyzer.process(pose)
+            combine(
+                poseRepository.poses,
+                shouldStartCountingReps,
+            ) { pose, shouldCountReps -> pose to shouldCountReps }.collectLatest { (pose, shouldCount) ->
                 setState {
                     copy(
                         pose = pose,
                         isPoseDetected = pose.landmarks.isNotEmpty(),
-                        squatResult = squatResult,
                     )
+                }
+                if (!shouldCount) {
+                    return@collectLatest
+                }
+                val squatResult = squatAnalyzer.process(pose)
+                setState {
+                    copy(squatResult = squatResult)
                 }
             }
         }
@@ -60,11 +77,26 @@ class AIFormCheckViewModel @Inject constructor(
     }
 
     override fun handleAction(action: AIFormCheckUiAction) {
+        when (action) {
+            is AIFormCheckUiAction.StartExercise -> {
+                shouldStartRepCounting(action.shouldStartCountingReps)
+            }
+        }
+    }
 
+    private fun shouldStartRepCounting(shouldStartCountingReps: Boolean) {
+        if (shouldStartCountingReps) clearRepsCount()
+        _shouldStartCountingReps.value = shouldStartCountingReps
+        setState { copy(startCountingReps = shouldStartCountingReps) }
+    }
+
+    fun clearRepsCount() {
+        squatAnalyzer.reset()
     }
 
     override fun onCleared() {
         cameraController.close()
+        clearRepsCount()
         super.onCleared()
     }
 
