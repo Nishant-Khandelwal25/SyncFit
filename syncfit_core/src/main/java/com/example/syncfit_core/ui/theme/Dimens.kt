@@ -17,3 +17,9 @@ object IconSize {
     val lg = 24.dp
     val xl = 32.dp
 }
+
+object BorderWidth {
+    val sm = 1.dp
+    val md = 2.dp
+    val lg = 4.dp
+}
