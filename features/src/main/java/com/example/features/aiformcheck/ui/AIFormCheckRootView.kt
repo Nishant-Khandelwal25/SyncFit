@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.features.aiformcheck.viewmodel.AIFormCheckUiAction
 import com.example.features.aiformcheck.viewmodel.AIFormCheckViewModel
 import com.example.syncfit_core.ui.theme.Spacing
 
@@ -24,7 +25,7 @@ fun AIFormCheckRootView(viewModel: AIFormCheckViewModel) {
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.clearRepsCount()
+            viewModel.onAction(AIFormCheckUiAction.EndExercise)
         }
     }
 

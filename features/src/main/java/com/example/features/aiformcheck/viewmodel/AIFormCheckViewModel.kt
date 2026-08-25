@@ -5,6 +5,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.features.aiformcheck.data.camera.CameraController
 import com.example.features.aiformcheck.domain.exercise.SquatAnalyzer
 import com.example.features.aiformcheck.domain.repository.PoseRepository
+import com.example.syncfit_core.localRepository.SyncFitDBRepository
+import com.example.syncfit_core.room.entity.ExerciseSession
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +20,12 @@ class AIFormCheckViewModel @Inject constructor(
     private val cameraController: CameraController,
     private val poseRepository: PoseRepository,
     private val squatAnalyzer: SquatAnalyzer,
+    private val dbRepository: SyncFitDBRepository,
 ) :
     BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
+
+    private var totalReps = 0
+    private var totalSets = 0
 
     private val _shouldStartCountingReps =
         MutableStateFlow(false)
@@ -42,10 +48,8 @@ class AIFormCheckViewModel @Inject constructor(
     }
 
     private fun setupPreview() {
-        cameraController.preview.setSurfaceProvider {
-            cameraController.preview.setSurfaceProvider { newSurfaceRequest ->
-                setState { copy(surfaceRequest = newSurfaceRequest) }
-            }
+        cameraController.preview.setSurfaceProvider { newSurfaceRequest ->
+            setState { copy(surfaceRequest = newSurfaceRequest) }
         }
     }
 
@@ -81,17 +85,80 @@ class AIFormCheckViewModel @Inject constructor(
             is AIFormCheckUiAction.StartExercise -> {
                 shouldStartRepCounting(action.shouldStartCountingReps)
             }
+
+            is AIFormCheckUiAction.EndExercise -> sessionEnd()
         }
     }
 
     private fun shouldStartRepCounting(shouldStartCountingReps: Boolean) {
-        if (shouldStartCountingReps) clearRepsCount()
+        if (shouldStartCountingReps) {
+            startSession()
+            clearRepsCount()
+        } else {
+            totalSets++
+            totalReps += state.value.squatResult?.reps ?: 0
+        }
         _shouldStartCountingReps.value = shouldStartCountingReps
-        setState { copy(startCountingReps = shouldStartCountingReps) }
+        setState {
+            copy(
+                startCountingReps = shouldStartCountingReps,
+                totalReps = totalReps,
+                totalSets = totalSets,
+            )
+        }
     }
 
-    fun clearRepsCount() {
+    private fun startSession() {
+        val sessionStarted = state.value.sessionStarted
+        if (!sessionStarted) {
+            setState { copy(sessionStarted = true, startTime = System.currentTimeMillis()) }
+        }
+    }
+
+    private fun clearRepsCount() {
         squatAnalyzer.reset()
+    }
+
+    private fun sessionEnd() {
+        val startTime = currentState.startTime ?: System.currentTimeMillis()
+        val endTime = System.currentTimeMillis()
+        if (_shouldStartCountingReps.value) {
+            totalSets++
+            totalReps += currentState.squatResult?.reps ?: 0
+            _shouldStartCountingReps.value = false
+        }
+        setState {
+            copy(
+                sessionStarted = false,
+                endTime = endTime,
+                totalReps = totalReps,
+                totalSets = totalSets,
+                startCountingReps = false,
+                squatResult = null,
+            )
+        }
+        if (totalReps > 0) {
+            updateSessionDetailsInDB(totalReps, totalSets, startTime, endTime)
+        }
+        clearRepsCount()
+    }
+
+    private fun updateSessionDetailsInDB(
+        totalReps: Int,
+        totalSets: Int,
+        startTime: Long,
+        endTime: Long,
+    ) {
+        launch {
+            val sessionInfo = ExerciseSession(
+                exerciseType = currentState.exerciseType,
+                repsCount = totalReps,
+                setsCount = totalSets,
+                startedAt = startTime,
+                endedAt = endTime,
+            )
+            dbRepository.upsertExerciseInfo(sessionInfo)
+        }
     }
 
     override fun onCleared() {

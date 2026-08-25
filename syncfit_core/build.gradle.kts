@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.room)
+    ksp(libs.androidx.room.compiler)
 
     ksp(libs.android.hilt.compiler)
     testImplementation(libs.junit)
