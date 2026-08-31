@@ -9,8 +9,17 @@ sealed interface Routes : NavKey {
     data object OnBoarding : Routes
 
     @Serializable
-    data object Home: Routes
+    data object Home : Routes
 
     @Serializable
-    data object AIFormCheck: Routes
+    data object Workouts : Routes
+
+    @Serializable
+    data object History : Routes
+
+    @Serializable
+    data object Profile : Routes
+
+    @Serializable
+    data object AIFormCheck : Routes
 }
