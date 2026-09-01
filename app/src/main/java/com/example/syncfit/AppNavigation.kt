@@ -25,6 +25,8 @@ import com.example.features.home.ui.HomeScreenRootView
 import com.example.features.home.viewmodel.HomeScreenViewModel
 import com.example.features.onboarding.ui.OnboardingRootView
 import com.example.features.onboarding.viewmodel.OnboardingViewModel
+import com.example.features.workouthistory.ui.WorkoutHistoryRootView
+import com.example.features.workouthistory.viewmodel.WorkoutHistoryViewModel
 import com.example.syncfit_core.R
 import com.example.syncfit_core.navigation.Navigator
 import com.example.syncfit_core.navigation.Routes
@@ -53,7 +55,8 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
         }
 
         Routes.History -> NavEntry(route) {
-            SamplePlaceHolder(R.string.nav_history)
+            val viewModel: WorkoutHistoryViewModel = hiltViewModel()
+            WorkoutHistoryRootView(viewModel)
         }
 
         Routes.Profile -> NavEntry(route) {
