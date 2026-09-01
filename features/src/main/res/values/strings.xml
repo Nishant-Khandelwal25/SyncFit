@@ -16,4 +16,7 @@
     <string name="camera_dialog_description">Please open settings and allow camera permission to start AI Form Check</string>
     <string name="dialog_confirm_button">Settings</string>
     <string name="dialog_dismiss_button">Dismiss</string>
+    <string name="no_workout_recorded">Once you record a workout, you’ll see your progress and activity here.</string>
+    <string name="reps_count">%1$s Reps</string>
+    <string name="sets_count">%1$s Sets</string>
 </resources>

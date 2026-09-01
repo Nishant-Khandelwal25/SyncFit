@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.example.features.aiformcheck.data.camera.CameraController
 import com.example.features.aiformcheck.domain.exercise.SquatAnalyzer
-import com.example.features.aiformcheck.domain.repository.PoseRepository
-import com.example.syncfit_core.localRepository.SyncFitDBRepository
+import com.example.features.aiformcheck.domain.usecase.AiFormCheckUseCase
 import com.example.syncfit_core.room.entity.ExerciseSession
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AIFormCheckViewModel @Inject constructor(
     private val cameraController: CameraController,
-    private val poseRepository: PoseRepository,
+    private val aiFormCheckUseCase: AiFormCheckUseCase,
     private val squatAnalyzer: SquatAnalyzer,
-    private val dbRepository: SyncFitDBRepository,
-) :
-    BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
+) : BaseViewModel<AIFormCheckUiState, AIFormCheckUiAction, AIFormCheckUiEvent>(AIFormCheckUiState()) {
 
     private var totalReps = 0
     private var totalSets = 0
@@ -56,7 +53,7 @@ class AIFormCheckViewModel @Inject constructor(
     private fun observePose() {
         launch {
             combine(
-                poseRepository.poses,
+                aiFormCheckUseCase.poses,
                 shouldStartCountingReps,
             ) { pose, shouldCountReps -> pose to shouldCountReps }.collectLatest { (pose, shouldCount) ->
                 setState {
@@ -157,7 +154,7 @@ class AIFormCheckViewModel @Inject constructor(
                 startedAt = startTime,
                 endedAt = endTime,
             )
-            dbRepository.upsertExerciseInfo(sessionInfo)
+            aiFormCheckUseCase.upsertExerciseInfo(sessionInfo)
         }
     }
 

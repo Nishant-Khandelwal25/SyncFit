@@ -1,10 +1,8 @@
-package com.example.syncfit_core.localRepository
+package com.example.features.workouthistory.domain
 
 import com.example.syncfit_core.room.entity.ExerciseSession
 import kotlinx.coroutines.flow.Flow
 
-interface SyncFitDBRepository {
+interface WorkoutHistoryUseCase {
     fun getExerciseInfo(): Flow<List<ExerciseSession>>
-
-    suspend fun upsertExerciseInfo(exerciseSession: ExerciseSession)
 }
