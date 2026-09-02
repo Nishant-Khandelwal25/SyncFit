@@ -1,6 +1,5 @@
 package com.example.features.onboarding.viewmodel
 
-import android.util.Log
 import com.example.features.onboarding.usecase.OnBoardingUseCase
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,10 +9,14 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(private val onBoardingUseCase: OnBoardingUseCase) :
     BaseViewModel<OnboardingUiState, OnboardingUiAction, OnboardingUiEvent>(OnboardingUiState()) {
 
-    fun onCreate() {
-        launch {
-            val isOnboarded = onBoardingUseCase.getUserHasOnboarded()
-            setState { copy(hasOnboarded = isOnboarded) }
+    init {
+        checkOnboardingStatus()
+    }
+
+    private fun checkOnboardingStatus() {
+        launch(onError = { setState { copy(hasOnboarded = false, isCheckingOnboarding = false) } }) {
+            val hasOnboarded = onBoardingUseCase.getUserHasOnboarded()
+            setState { copy(hasOnboarded = hasOnboarded, isCheckingOnboarding = false) }
         }
     }
 
@@ -29,7 +32,6 @@ class OnboardingViewModel @Inject constructor(private val onBoardingUseCase: OnB
         launch {
             setState { copy(hasOnboarded = true) }
             onBoardingUseCase.setUserHasOnboarded(true)
-            Log.d("TAG", "updateOnboardingStatus: ${onBoardingUseCase.getUserHasOnboarded()}")
         }
     }
 }

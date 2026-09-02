@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SyncFit" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SyncFit" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/splash_background</item>
+    </style>
+
+    <style name="Theme.SyncFit.Starting" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/sync_fit_logo_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.SyncFit</item>
+    </style>
 </resources>

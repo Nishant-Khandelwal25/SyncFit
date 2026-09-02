@@ -75,10 +75,10 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
 @Composable
 fun AppNavigation(
     hasOnboarded: Boolean,
+    onboardingViewModel: OnboardingViewModel,
 ) {
     if (!hasOnboarded) {
-        val viewModel: OnboardingViewModel = hiltViewModel()
-        OnboardingRootView(viewModel)
+        OnboardingRootView(onboardingViewModel)
         return
     }
 
