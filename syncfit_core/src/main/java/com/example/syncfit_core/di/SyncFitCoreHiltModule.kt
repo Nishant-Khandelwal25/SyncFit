@@ -14,6 +14,7 @@ import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepository
 import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepositoryImpl
 import com.example.syncfit_core.room.dao.ExerciseSessionDao
 import com.example.syncfit_core.room.db.ExerciseSessionDB
+import com.example.syncfit_core.room.migration.Migration.MIGRATION_1_2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +42,8 @@ object SyncFitCoreHiltModule {
     @Provides
     @Singleton
     fun provideExerciseSessionDB(@ApplicationContext context: Context): ExerciseSessionDB {
-        return Room.databaseBuilder(context, ExerciseSessionDB::class.java, EXERCISE_SESSION_DB).build()
+        return Room.databaseBuilder(context, ExerciseSessionDB::class.java, EXERCISE_SESSION_DB)
+            .addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides

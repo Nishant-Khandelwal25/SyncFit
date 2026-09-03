@@ -19,4 +19,10 @@
     <string name="no_workout_recorded">Once you record a workout, you’ll see your progress and activity here.</string>
     <string name="reps_count">%1$s Reps</string>
     <string name="sets_count">%1$s Sets</string>
+    <string name="form_score">Form Score</string>
+    <string name="great">Great</string>
+    <string name="good">Good</string>
+    <string name="average">Average</string>
+    <string name="poor">Poor</string>
+    <string name="empty_string">--</string>
 </resources>
