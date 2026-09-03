@@ -41,6 +41,7 @@ private fun WorkoutHistoryListPreview() {
             setsCount = 2,
             startedAt = 1788185120139,
             endedAt = 1788185120170,
+            formScore = 80,
         ),
         ExerciseSession(
             id = 2,
@@ -49,6 +50,7 @@ private fun WorkoutHistoryListPreview() {
             setsCount = 2,
             startedAt = 1788185120139,
             endedAt = 1788185120170,
+            formScore = 85,
         ),
         ExerciseSession(
             id = 3,
@@ -57,6 +59,7 @@ private fun WorkoutHistoryListPreview() {
             setsCount = 3,
             startedAt = 1788185120139,
             endedAt = 1788185120170,
+            formScore = 90,
         ),
     )
     SyncFitTheme {

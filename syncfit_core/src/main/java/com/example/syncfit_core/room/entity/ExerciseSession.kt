@@ -12,5 +12,6 @@ data class ExerciseSession(
     val repsCount: Int?,
     val setsCount: Int?,
     val startedAt: Long?,
-    var endedAt: Long?,
+    val endedAt: Long?,
+    val formScore: Int?,
 )

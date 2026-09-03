@@ -1,6 +1,7 @@
 package com.example.features.aiformcheck.viewmodel
 
 import android.content.Context
+import android.os.SystemClock
 import androidx.lifecycle.LifecycleOwner
 import com.example.features.aiformcheck.data.camera.CameraController
 import com.example.features.aiformcheck.domain.exercise.SquatAnalyzer
@@ -65,7 +66,7 @@ class AIFormCheckViewModel @Inject constructor(
                 if (!shouldCount) {
                     return@collectLatest
                 }
-                val squatResult = squatAnalyzer.process(pose)
+                val squatResult = squatAnalyzer.process(pose, SystemClock.elapsedRealtime())
                 setState {
                     copy(squatResult = squatResult)
                 }
@@ -90,7 +91,7 @@ class AIFormCheckViewModel @Inject constructor(
     private fun shouldStartRepCounting(shouldStartCountingReps: Boolean) {
         if (shouldStartCountingReps) {
             startSession()
-            clearRepsCount()
+            squatAnalyzer.startNewSet()
         } else {
             totalSets++
             totalReps += state.value.squatResult?.reps ?: 0
@@ -118,6 +119,8 @@ class AIFormCheckViewModel @Inject constructor(
 
     private fun sessionEnd() {
         val startTime = currentState.startTime ?: System.currentTimeMillis()
+        val formScore =
+            currentState.squatResult?.averageFormScore ?: currentState.squatResult?.lastRepFormScore?.overallScore ?: 0
         val endTime = System.currentTimeMillis()
         if (_shouldStartCountingReps.value) {
             totalSets++
@@ -135,9 +138,9 @@ class AIFormCheckViewModel @Inject constructor(
             )
         }
         if (totalReps > 0) {
-            updateSessionDetailsInDB(totalReps, totalSets, startTime, endTime)
+            updateSessionDetailsInDB(totalReps, totalSets, startTime, endTime, formScore)
         }
-        clearRepsCount()
+        squatAnalyzer.reset()
     }
 
     private fun updateSessionDetailsInDB(
@@ -145,6 +148,7 @@ class AIFormCheckViewModel @Inject constructor(
         totalSets: Int,
         startTime: Long,
         endTime: Long,
+        formScore: Int,
     ) {
         launch {
             val sessionInfo = ExerciseSession(
@@ -153,6 +157,7 @@ class AIFormCheckViewModel @Inject constructor(
                 setsCount = totalSets,
                 startedAt = startTime,
                 endedAt = endTime,
+                formScore = formScore,
             )
             aiFormCheckUseCase.upsertExerciseInfo(sessionInfo)
         }

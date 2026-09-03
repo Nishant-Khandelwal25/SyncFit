@@ -44,11 +44,12 @@ fun AIFormCheckRootView(viewModel: AIFormCheckViewModel) {
 
         ExerciseStatsOverlay(state.squatResult, state.startCountingReps)
 
-        StartExerciseOverlay(
-            Modifier
+        FormScoreOverlay(
+            modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = Spacing.xl),
-            viewModel::onAction,
+            squatResult = state.squatResult,
+            onAction = viewModel::onAction,
         )
 
     }

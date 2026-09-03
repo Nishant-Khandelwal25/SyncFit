@@ -10,15 +10,51 @@ import com.example.features.aiformcheck.data.enums.SquatPhase
 import com.example.features.aiformcheck.data.exercise.SquatConfig
 import com.example.features.aiformcheck.data.exercise.SquatResult
 import com.example.features.aiformcheck.domain.model.Pose
+import com.example.features.aiformcheck.domain.scoring.ExerciseFormScore
+import com.example.features.aiformcheck.domain.scoring.ExerciseFormScorer
+import com.example.features.aiformcheck.domain.scoring.ExerciseFrameAnalysis
+import com.example.features.aiformcheck.domain.scoring.ExerciseMotionAnalyser
+import com.example.features.aiformcheck.domain.scoring.RepEvent
 import com.example.features.aiformcheck.util.CalculateAngleUtil
 import javax.inject.Inject
+import kotlin.math.abs
 
-class SquatAnalyzer @Inject constructor(private val config: SquatConfig) {
+class SquatAnalyzer @Inject constructor(private val config: SquatConfig) : ExerciseMotionAnalyser {
     private var phase = SquatPhase.STANDING
 
     private var reps = 0
+    private val formScorer = ExerciseFormScorer(profile = SquatScoringProfile.profile)
+    private var lastRepFormScore: ExerciseFormScore? = null
+    private val completedRepScores = mutableListOf<Int>()
 
-    fun process(pose: Pose): SquatResult {
+    fun process(pose: Pose, timeStampMillis: Long): SquatResult {
+        val frameAnalysis = analyse(pose, timeStampMillis)
+        val scoringUpdate = formScorer.processFrame(frameAnalysis)
+
+        scoringUpdate.completedScore?.let { completedScore ->
+            lastRepFormScore = completedScore
+            completedScore.overallScore?.let { score ->
+                completedRepScores += score
+            }
+        }
+
+        return SquatResult(
+            reps = reps,
+            phase = phase,
+            kneeAngle = frameAnalysis.metrics[SquatFormMetrics.averageKneeAngle],
+            leftKneeAngle = frameAnalysis.metrics[SquatFormMetrics.leftKneeAngle],
+            rightKneeAngle = frameAnalysis.metrics[SquatFormMetrics.rightKneeAngle],
+            isValidPose = frameAnalysis.isValidPose,
+            lastRepFormScore = lastRepFormScore,
+            averageFormScore = calculateAverageFormScore(),
+        )
+    }
+
+
+    override fun analyse(
+        pose: Pose,
+        timestampMillis: Long,
+    ): ExerciseFrameAnalysis {
         val landmarks = pose.landmarks
 
         val leftHip = landmarks.getOrNull(LEFT_HIP)
@@ -37,7 +73,7 @@ class SquatAnalyzer @Inject constructor(private val config: SquatConfig) {
             rightKnee == null ||
             rightAnkle == null
         ) {
-            return invalidResult()
+            return invalidFrame(timestampMillis)
         }
 
         val isReliable =
@@ -52,39 +88,62 @@ class SquatAnalyzer @Inject constructor(private val config: SquatConfig) {
             )
 
         if (!isReliable) {
-            return invalidResult()
+            return invalidFrame(timestampMillis)
         }
 
         val leftKneeAngle = CalculateAngleUtil.calculate(leftHip, leftKnee, leftAnkle)
         val rightKneeAngle = CalculateAngleUtil.calculate(rightHip, rightKnee, rightAnkle)
+        val averageKneeAngle = CalculateAngleUtil.calculateAverageAngle(leftKneeAngle, rightKneeAngle)
+        val legSymmetryDifference = abs(leftKneeAngle - rightKneeAngle)
+        val repEvent = updatePhase(averageKneeAngle)
 
-        val kneeAngle = CalculateAngleUtil.calculateAverageAngle(leftKneeAngle, rightKneeAngle)
+        val metrics = buildMap {
+            put(SquatFormMetrics.averageKneeAngle, averageKneeAngle)
+            put(SquatFormMetrics.leftKneeAngle, leftKneeAngle)
+            put(SquatFormMetrics.rightKneeAngle, rightKneeAngle)
+            put(SquatFormMetrics.legSymmetry, legSymmetryDifference)
+            if (repEvent == RepEvent.COMPLETED) {
+                put(SquatFormMetrics.lockoutAngle, averageKneeAngle)
+            }
+        }
 
-        updatePhase(kneeAngle)
-
-        return SquatResult(
-            reps = reps,
-            phase = phase,
-            kneeAngle = kneeAngle,
-            leftKneeAngle = leftKneeAngle,
-            rightKneeAngle = rightKneeAngle,
+        return ExerciseFrameAnalysis(
+            timestamp = timestampMillis,
             isValidPose = true,
+            repEvent = repEvent,
+            metrics = metrics,
         )
     }
 
-    private fun updatePhase(kneeAngle: Double) {
-        when (phase) {
+    private fun updatePhase(kneeAngle: Double): RepEvent {
+        return when (phase) {
             // User is standing, wait for knee angle to decrease
             SquatPhase.STANDING -> {
                 if (kneeAngle < config.descendingAngle) {
                     phase = SquatPhase.DESCENDING
+                    RepEvent.STARTED
+                } else {
+                    RepEvent.NONE
                 }
             }
 
             // User is descending, wait for knee angle to reach bottom
             SquatPhase.DESCENDING -> {
-                if (kneeAngle <= config.bottomAngle) {
-                    phase = SquatPhase.BOTTOM
+                when {
+                    kneeAngle <= config.bottomAngle -> {
+                        phase = SquatPhase.BOTTOM
+                        RepEvent.NONE
+                    }
+
+                    // The user started moving down but returned to standing without reaching the bottom position.
+                    kneeAngle >= config.standingAngle -> {
+                        phase = SquatPhase.STANDING
+                        RepEvent.CANCELLED
+                    }
+
+                    else -> {
+                        RepEvent.NONE
+                    }
                 }
             }
 
@@ -93,31 +152,55 @@ class SquatAnalyzer @Inject constructor(private val config: SquatConfig) {
                 if (kneeAngle > config.ascendingAngle) {
                     phase = SquatPhase.ASCENDING
                 }
+                RepEvent.NONE
             }
 
             // User is ascending, wait for knee angle to reach standing
             SquatPhase.ASCENDING -> {
-                if (kneeAngle >= config.standingAngle) {
-                    phase = SquatPhase.STANDING
-                    reps++
+                when {
+                    kneeAngle >= config.standingAngle -> {
+                        phase = SquatPhase.STANDING
+                        reps++
+                        RepEvent.COMPLETED
+                    }
+                    // The user moved down again before finishing. Continue tracking the same rep.
+                    kneeAngle <= config.bottomAngle -> {
+                        phase = SquatPhase.BOTTOM
+                        RepEvent.NONE
+                    }
+
+                    else -> {
+                        RepEvent.NONE
+                    }
                 }
             }
         }
     }
 
-    private fun invalidResult(): SquatResult {
-        return SquatResult(
-            reps = reps,
-            phase = phase,
-            kneeAngle = null,
-            leftKneeAngle = null,
-            rightKneeAngle = null,
+    private fun invalidFrame(timeStampMillis: Long): ExerciseFrameAnalysis {
+        return ExerciseFrameAnalysis(
+            timestamp = timeStampMillis,
             isValidPose = false,
+            repEvent = RepEvent.NONE,
+            metrics = emptyMap(),
         )
     }
 
-    fun reset() {
+    private fun calculateAverageFormScore(): Int? {
+        if (completedRepScores.isEmpty()) return null
+        return completedRepScores.average().toInt()
+    }
+
+    override fun reset() {
+        startNewSet()
+        lastRepFormScore = null
+        completedRepScores.clear()
+    }
+
+    fun startNewSet() {
         phase = SquatPhase.STANDING
         reps = 0
+
+        formScorer.reset()
     }
 }

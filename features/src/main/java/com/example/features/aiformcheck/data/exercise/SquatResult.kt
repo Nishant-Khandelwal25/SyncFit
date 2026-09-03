@@ -1,6 +1,7 @@
 package com.example.features.aiformcheck.data.exercise
 
 import com.example.features.aiformcheck.data.enums.SquatPhase
+import com.example.features.aiformcheck.domain.scoring.ExerciseFormScore
 
 data class SquatResult(
     val reps: Int,
@@ -9,4 +10,6 @@ data class SquatResult(
     val leftKneeAngle: Double?,
     val rightKneeAngle: Double?,
     val isValidPose: Boolean,
+    val lastRepFormScore: ExerciseFormScore? = null,
+    val averageFormScore: Int? = null,
 )
