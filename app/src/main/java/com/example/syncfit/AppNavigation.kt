@@ -23,6 +23,8 @@ import com.example.features.aiformcheck.ui.AIFormCheckRootView
 import com.example.features.aiformcheck.viewmodel.AIFormCheckViewModel
 import com.example.features.home.ui.HomeScreenRootView
 import com.example.features.home.viewmodel.HomeScreenViewModel
+import com.example.features.login.ui.LoginRootView
+import com.example.features.login.viewmodel.LoginViewModel
 import com.example.features.onboarding.ui.OnboardingRootView
 import com.example.features.onboarding.viewmodel.OnboardingViewModel
 import com.example.features.workouthistory.ui.WorkoutHistoryRootView
@@ -75,10 +77,17 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
 @Composable
 fun AppNavigation(
     hasOnboarded: Boolean,
+    isUserLoggedIn: Boolean,
     onboardingViewModel: OnboardingViewModel,
+    loginViewModel: LoginViewModel,
 ) {
     if (!hasOnboarded) {
         OnboardingRootView(onboardingViewModel)
+        return
+    }
+
+    if (!isUserLoggedIn) {
+        LoginRootView(loginViewModel)
         return
     }
 

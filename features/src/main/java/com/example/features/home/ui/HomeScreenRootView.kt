@@ -14,7 +14,6 @@ import com.example.syncfit_core.viewmodel.ObserveAsEvents
 @Composable
 fun HomeScreenRootView(viewModel: HomeScreenViewModel, navigator: Navigator) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    viewModel.onCreate()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {

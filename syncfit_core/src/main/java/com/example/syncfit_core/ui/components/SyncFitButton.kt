@@ -18,13 +18,15 @@ fun SyncFitButton(
     text: String,
     buttonColor: Color = ChartGreen,
     textColor: Color = BackgroundDark,
-    onClick: () -> Unit
+    enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(buttonColor, contentColor = textColor),
         shape = SyncFitShapes.medium,
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled,
     ) {
         Text(text = text)
     }

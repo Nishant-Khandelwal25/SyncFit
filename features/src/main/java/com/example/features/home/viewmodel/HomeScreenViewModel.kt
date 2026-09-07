@@ -2,15 +2,22 @@ package com.example.features.home.viewmodel
 
 import com.example.features.home.model.HomeScreenData
 import com.example.features.home.usecase.HomeScreenUseCase
+import com.example.features.login.usecase.LoginUseCase
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val useCase: HomeScreenUseCase,
+    private val loginUseCase: LoginUseCase,
 ) :
     BaseViewModel<HomeScreenUiState, HomeScreenUiAction, HomeScreenUiEvent>(HomeScreenUiState()) {
+    init {
+        initialiseState()
+    }
+
     // Will make it dynamic once health connect integration is done
     private val homeScreenDataLists = listOf(
         HomeScreenData("Sleep", "7h 45m", "Good"),
@@ -32,21 +39,20 @@ class HomeScreenViewModel @Inject constructor(
             featureValue = "You're ready for a normal intensity workout today.",
         )
 
-    fun onCreate() {
-        initialiseState()
-    }
-
     private fun initialiseState() {
         launch {
             val isCameraPermissionRequested = useCase.getHasRequestedCameraPermission()
-            setState {
-                copy(
-                    healthConnectFeatures = homeScreenDataLists,
-                    recoveryScore = recoveryScoreValue,
-                    startWorkout = startWorkOutSection,
-                    quickInsights = quickInsight,
-                    cameraPermissionRequested = isCameraPermissionRequested,
-                )
+            loginUseCase.username.collectLatest { username ->
+                setState {
+                    copy(
+                        healthConnectFeatures = homeScreenDataLists,
+                        recoveryScore = recoveryScoreValue,
+                        startWorkout = startWorkOutSection,
+                        quickInsights = quickInsight,
+                        cameraPermissionRequested = isCameraPermissionRequested,
+                        username = username.orEmpty(),
+                    )
+                }
             }
         }
     }

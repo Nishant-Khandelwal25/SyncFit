@@ -11,4 +11,5 @@ data class HomeScreenUiState(
     var launchCameraPermissionDialog: Boolean = false,
     var cameraPermissionRequested: Boolean = false,
     var launchSettingsForCameraPermission: Boolean = false,
+    val username: String? = null,
 ) : UiState
