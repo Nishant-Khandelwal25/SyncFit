@@ -48,7 +48,7 @@ fun HomeScreenContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction) -
             .fillMaxSize()
             .padding(Spacing.sm),
     ) {
-        item { HomeScreenHeader() }
+        item { HomeScreenHeader(state.username.orEmpty()) }
         item { HomeScreenRecoverySection(state.recoveryScore) }
         item {
             Row(
@@ -75,16 +75,15 @@ fun HomeScreenContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction) -
     }
 }
 
-
 @Composable
-fun HomeScreenHeader() {
+fun HomeScreenHeader(username: String) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SyncFitText(text = stringResource(R.string.hi_name, "Nishant"), textStyle = SyncFitTypography.titleLarge)
+        SyncFitText(text = stringResource(R.string.hi_name, username), textStyle = SyncFitTypography.titleLarge)
         SyncFitResourceImage(resId = R.drawable.wave_hand, modifier = Modifier.padding(horizontal = Spacing.xs))
     }
 }
@@ -227,6 +226,7 @@ fun HomeScreenContentPreview() {
                     buttonText = "Start Workout",
                 ),
                 HomeScreenData("Recovery is looking good", "You're ready for a normal intensity workout today."),
+                username = "Nishant",
             ),
         ) {}
     }

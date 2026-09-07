@@ -4,6 +4,8 @@ import com.example.features.aiformcheck.domain.usecase.AiFormCheckUseCase
 import com.example.features.aiformcheck.domain.usecase.AiFormCheckUseCaseImpl
 import com.example.features.home.usecase.HomeScreenUseCase
 import com.example.features.home.usecase.HomeScreenUseCaseImpl
+import com.example.features.login.usecase.LoginUseCase
+import com.example.features.login.usecase.LoginUseCaseImpl
 import com.example.features.onboarding.usecase.OnBoardingUseCase
 import com.example.features.onboarding.usecase.OnBoardingUseCaseImpl
 import com.example.features.workouthistory.domain.WorkoutHistoryUseCase
@@ -27,4 +29,7 @@ interface SyncFitFeaturesUseCaseModule {
 
     @Binds
     fun bindWorkoutHistoryUseCase(impl: WorkoutHistoryUseCaseImpl): WorkoutHistoryUseCase
+
+    @Binds
+    fun bindLoginUseCase(impl: LoginUseCaseImpl): LoginUseCase
 }

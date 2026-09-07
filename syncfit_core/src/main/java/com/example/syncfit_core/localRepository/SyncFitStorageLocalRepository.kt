@@ -1,5 +1,7 @@
 package com.example.syncfit_core.localRepository
 
+import kotlinx.coroutines.flow.Flow
+
 interface SyncFitStorageLocalRepository {
     suspend fun setUserHasOnboarded(hasOnboarded: Boolean)
 
@@ -7,4 +9,8 @@ interface SyncFitStorageLocalRepository {
 
     suspend fun setHasRequestedCameraPermission(hasRequested: Boolean)
     suspend fun getHasRequestedCameraPermission(): Boolean
+
+    suspend fun loginUser(username: String)
+    val username: Flow<String?>
+    suspend fun logoutUser()
 }
