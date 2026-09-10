@@ -4,4 +4,5 @@ import com.example.syncfit_core.viewmodel.UiEvent
 
 sealed interface HomeScreenUiEvent : UiEvent {
     data object LaunchAIFormCheck : HomeScreenUiEvent
+    data class RequestHealthPermissions(val permissions: Set<String>) : HomeScreenUiEvent
 }

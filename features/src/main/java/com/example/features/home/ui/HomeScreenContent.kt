@@ -8,7 +8,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,12 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.features.R
 import com.example.features.home.model.HomeScreenData
 import com.example.features.home.viewmodel.HomeScreenUiAction
 import com.example.features.home.viewmodel.HomeScreenUiState
+import com.example.syncfit_core.healthconnect.model.HeartRateSummary
+import com.example.syncfit_core.healthconnect.model.SleepSummary
+import com.example.syncfit_core.healthconnect.model.TodayHealthSummary
 import com.example.syncfit_core.ui.components.SyncFitCard
 import com.example.syncfit_core.ui.components.SyncFitResourceImage
 import com.example.syncfit_core.ui.components.SyncFitText
@@ -35,11 +36,11 @@ import com.example.syncfit_core.ui.theme.IconSize
 import com.example.syncfit_core.ui.theme.Spacing
 import com.example.syncfit_core.ui.theme.SyncFitTheme
 import com.example.syncfit_core.ui.theme.SyncFitTypography
-import com.example.syncfit_core.ui.theme.TextPrimaryDark
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import java.time.Instant
 
 @Composable
 fun HomeScreenContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction) -> Unit) {
@@ -49,19 +50,7 @@ fun HomeScreenContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction) -
             .padding(Spacing.sm),
     ) {
         item { HomeScreenHeader(state.username.orEmpty()) }
-        item { HomeScreenRecoverySection(state.recoveryScore) }
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
-            ) {
-                state.healthConnectFeatures.forEach {
-                    HomeScreenSleepAndHrvSection(modifier = Modifier.weight(1f), it)
-
-                }
-            }
-        }
+        item { HealthConnectContent(state, onAction) }
         item {
             HomeScreenStartWorkOutSection(
                 state.startWorkout,
@@ -86,39 +75,6 @@ fun HomeScreenHeader(username: String) {
         SyncFitText(text = stringResource(R.string.hi_name, username), textStyle = SyncFitTypography.titleLarge)
         SyncFitResourceImage(resId = R.drawable.wave_hand, modifier = Modifier.padding(horizontal = Spacing.xs))
     }
-}
-
-@Composable
-fun HomeScreenRecoverySection(recoveryScore: HomeScreenData) {
-    SyncFitCard(
-        titleText = recoveryScore.featureName,
-        bodyText1 = recoveryScore.featureValue,
-        bodyText2 = recoveryScore.featureStatus,
-        titleTextStyle = SyncFitTypography.bodyLarge,
-        bodyText1Style = SyncFitTypography.displayLarge,
-        endIconResId = R.drawable.incline_graph,
-        endIconSize = 96.dp,
-        bodyText3 = recoveryScore.changeInValue,
-        bodyText1Color = TextPrimaryDark,
-    )
-}
-
-@Composable
-fun HomeScreenSleepAndHrvSection(
-    modifier: Modifier = Modifier,
-    homeScreenData: HomeScreenData,
-) {
-    SyncFitCard(
-        modifier = modifier,
-        titleText = homeScreenData.featureName,
-        bodyText1 = homeScreenData.featureValue,
-        bodyText2 = homeScreenData.featureStatus,
-        titleTextStyle = SyncFitTypography.bodyLarge,
-        bodyText1Style = SyncFitTypography.titleLarge,
-        endIconResId = R.drawable.arrow_right,
-        endIconSize = IconSize.sm,
-        bodyText1Color = TextPrimaryDark,
-    )
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -221,12 +177,29 @@ fun HomeScreenContentPreview() {
                 ),
                 HomeScreenData("Recovery Score", "82", "Good", changeInValue = "12 points higher vs yesterday"),
                 HomeScreenData(
-                    "Upper Body Strength",
+                    "Upper body strength",
                     featureValue = "45 mins - 6 exercises",
                     buttonText = "Start Workout",
                 ),
                 HomeScreenData("Recovery is looking good", "You're ready for a normal intensity workout today."),
                 username = "Nishant",
+                isCheckingHealthConnect = false,
+                isHealthConnectAvailable = true,
+                hasHealthPermission = true,
+                healthSummary = TodayHealthSummary(
+                    steps = 8500,
+                    totalCaloriesKcal = 450.5,
+                    heartRateSummary = HeartRateSummary(
+                        latestBpm = 72,
+                        averageBpm = 68.0,
+                    ),
+                    sleepSummary = SleepSummary(
+                        startTime = Instant.now().minusSeconds(3600 * 8),
+                        endTime = Instant.now(),
+                        durationMinutes = 480,
+                        title = "Good sleep",
+                    ),
+                ),
             ),
         ) {}
     }

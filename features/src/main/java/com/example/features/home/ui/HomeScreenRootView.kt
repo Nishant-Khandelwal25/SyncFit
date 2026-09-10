@@ -1,7 +1,9 @@
 package com.example.features.home.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.features.home.viewmodel.HomeScreenUiAction
 import com.example.features.home.viewmodel.HomeScreenUiEvent
@@ -14,11 +16,20 @@ import com.example.syncfit_core.viewmodel.ObserveAsEvents
 @Composable
 fun HomeScreenRootView(viewModel: HomeScreenViewModel, navigator: Navigator) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val healthPermissionLauncher = rememberLauncherForActivityResult(
+        contract = PermissionController.createRequestPermissionResultContract(),
+    ) {
+        viewModel.onAction(HomeScreenUiAction.HealthPermissionRequestCompleted)
+    }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is HomeScreenUiEvent.LaunchAIFormCheck -> {
                 navigator.navigate(Routes.AIFormCheck)
+            }
+
+            is HomeScreenUiEvent.RequestHealthPermissions -> {
+                healthPermissionLauncher.launch(event.permissions)
             }
         }
     }

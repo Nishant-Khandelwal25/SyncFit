@@ -9,4 +9,7 @@ sealed interface HomeScreenUiAction : UiAction {
     data object CameraPermissionPositiveButtonClick : HomeScreenUiAction
     data object SettingsLaunched : HomeScreenUiAction
     data object OnStartAIFormCheckClick : HomeScreenUiAction
+    data object ConnectHealthConnect : HomeScreenUiAction
+    data object RefreshHealthData : HomeScreenUiAction
+    data object HealthPermissionRequestCompleted : HomeScreenUiAction
 }

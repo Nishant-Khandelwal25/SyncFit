@@ -28,4 +28,18 @@
     <string name="enter_username">Enter your username…</string>
     <string name="username">Username</string>
     <string name="login">Login</string>
+    <string name="track_your_progress">Track your progress</string>
+    <string name="sync_health_connect">Sync Health Connect to unlock a complete view of your activity, sleep, and heart health.</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="checking_health_connect">Checking Health Connect…</string>
+    <string name="health_connect_unavailable">Health Connect is unavailable</string>
+    <string name="loading_health_data">Loading health data…</string>
+    <string name="no_health_data_found">No health data found</string>
+    <string name="heart_rate">Heart rate</string>
+    <string name="total_calories">Total calories</string>
+    <string name="steps">Steps</string>
+    <string name="latest_sleep">Latest Sleep</string>
+    <string name="health_overview">Health overview</string>
+    <string name="status">Status</string>
+    <string name="refresh_health_data">Refresh health data</string>
 </resources>
