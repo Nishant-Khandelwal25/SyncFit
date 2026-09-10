@@ -53,6 +53,11 @@ fun SyncFitCard(
     bodyText1Color: Color = TextSecondaryDark,
     bodyText2Color: Color = ChartGreen,
     bodyText3Color: Color = TextSecondaryDark,
+    startIconStartPadding: Dp = Spacing.md,
+    startIconTopPadding: Dp = Spacing.md,
+    endIconEndPadding: Dp = Spacing.md,
+    endIconTopPadding: Dp = Spacing.md,
+    endIconAlignment: Alignment.Vertical = Alignment.Top,
     onCardClick: (() -> Unit)? = null,
 ) {
     Column(
@@ -70,7 +75,7 @@ fun SyncFitCard(
                 SyncFitResourceImage(
                     resId = it,
                     modifier = Modifier
-                        .padding(top = Spacing.md, start = Spacing.md)
+                        .padding(top = startIconTopPadding, start = startIconStartPadding)
                         .size(startIconSize),
                 )
             }
@@ -112,8 +117,9 @@ fun SyncFitCard(
             }
 
             val endIconModifier = Modifier
-                .padding(top = Spacing.md, end = Spacing.md)
+                .padding(top = endIconTopPadding, end = endIconEndPadding)
                 .size(endIconSize)
+                .align(endIconAlignment)
             if (endIconResId != null) {
                 SyncFitResourceImage(resId = endIconResId, modifier = endIconModifier)
             }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.features.R
+import com.example.features.home.util.HomeUtil.formatSleepDuration
 import com.example.features.home.viewmodel.HomeScreenUiAction
 import com.example.features.home.viewmodel.HomeScreenUiState
 import com.example.syncfit_core.ui.components.SyncFitButton
@@ -83,7 +84,7 @@ fun HealthConnectContent(state: HomeScreenUiState, onAction: (HomeScreenUiAction
                     )
                     SyncFitCard(
                         titleText = stringResource(R.string.latest_sleep),
-                        bodyText1 = health.sleepSummary?.durationMinutes?.let { "${it / 60} hours" }
+                        bodyText1 = health.sleepSummary?.durationMinutes?.let { formatSleepDuration(it) }
                             ?: "No sleep session found",
                     )
                 }

@@ -29,6 +29,8 @@ import com.example.features.onboarding.ui.OnboardingRootView
 import com.example.features.onboarding.viewmodel.OnboardingViewModel
 import com.example.features.workouthistory.ui.WorkoutHistoryRootView
 import com.example.features.workouthistory.viewmodel.WorkoutHistoryViewModel
+import com.example.features.workouts.ui.WorkoutsRootView
+import com.example.features.workouts.viewmodel.WorkoutsViewModel
 import com.example.syncfit_core.R
 import com.example.syncfit_core.navigation.Navigator
 import com.example.syncfit_core.navigation.Routes
@@ -53,7 +55,8 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
         }
 
         Routes.Workouts -> NavEntry(route) {
-            SamplePlaceHolder(R.string.nav_workout)
+            val viewModel: WorkoutsViewModel = hiltViewModel()
+            WorkoutsRootView(viewModel, navigator)
         }
 
         Routes.History -> NavEntry(route) {
@@ -68,6 +71,10 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
         Routes.AIFormCheck -> NavEntry(route) {
             val viewModel: AIFormCheckViewModel = hiltViewModel()
             AIFormCheckRootView(viewModel)
+        }
+
+        is Routes.WorkoutInformation -> NavEntry(route) {
+            SamplePlaceHolder(R.string.workout_information_placeholder)
         }
 
         else -> error("Unknown Route: $route")

@@ -171,10 +171,6 @@ fun HomeScreenContentPreview() {
     SyncFitTheme {
         HomeScreenContent(
             state = HomeScreenUiState(
-                listOf(
-                    HomeScreenData("Sleep", "7h 45m", "Good"),
-                    HomeScreenData("HRV", "58ms", "Good"),
-                ),
                 HomeScreenData("Recovery Score", "82", "Good", changeInValue = "12 points higher vs yesterday"),
                 HomeScreenData(
                     "Upper body strength",

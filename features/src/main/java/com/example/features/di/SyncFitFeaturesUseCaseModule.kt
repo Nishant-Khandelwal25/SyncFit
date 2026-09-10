@@ -12,6 +12,8 @@ import com.example.features.onboarding.usecase.OnBoardingUseCase
 import com.example.features.onboarding.usecase.OnBoardingUseCaseImpl
 import com.example.features.workouthistory.domain.WorkoutHistoryUseCase
 import com.example.features.workouthistory.domain.WorkoutHistoryUseCaseImpl
+import com.example.features.workouts.usecase.WorkoutsUseCase
+import com.example.features.workouts.usecase.WorkoutsUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,4 +39,7 @@ interface SyncFitFeaturesUseCaseModule {
 
     @Binds
     fun bindHealthConnectUseCase(impl: HealthConnectUseCaseImpl): HealthConnectUseCase
+
+    @Binds
+    fun bindWorkoutsUseCase(impl: WorkoutsUseCaseImpl): WorkoutsUseCase
 }
