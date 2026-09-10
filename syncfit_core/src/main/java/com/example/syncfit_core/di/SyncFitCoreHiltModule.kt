@@ -8,6 +8,8 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room3.Room
 import com.example.syncfit_core.constants.SyncFitCoreConstants.DATA_STORE_KEY
 import com.example.syncfit_core.constants.SyncFitCoreConstants.EXERCISE_SESSION_DB
+import com.example.syncfit_core.healthconnect.repository.HealthConnectRepository
+import com.example.syncfit_core.healthconnect.repository.HealthConnectRepositoryImpl
 import com.example.syncfit_core.localRepository.SyncFitDBRepository
 import com.example.syncfit_core.localRepository.SyncFitDBRepositoryImpl
 import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepository
@@ -56,4 +58,9 @@ object SyncFitCoreHiltModule {
     @Singleton
     fun provideSyncFitExerciseSessionRepository(exerciseSessionDao: ExerciseSessionDao): SyncFitDBRepository =
         SyncFitDBRepositoryImpl(exerciseSessionDao)
+
+    @Provides
+    @Singleton
+    fun provideHealthConnectRepository(@ApplicationContext context: Context): HealthConnectRepository =
+        HealthConnectRepositoryImpl(context)
 }

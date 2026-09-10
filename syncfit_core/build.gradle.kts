@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.room)
     ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.health.connect)
 
     ksp(libs.android.hilt.compiler)
     testImplementation(libs.junit)

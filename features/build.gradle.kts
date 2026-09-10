@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -29,6 +29,7 @@ android {
 
 dependencies {
     implementation(project(":syncfit_core"))
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.camera.view)
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.accompanist.permissions)
     implementation(libs.mediapipe.vision)
+    implementation(libs.androidx.health.connect)
 
     ksp(libs.android.hilt.compiler)
     testImplementation(libs.junit)
