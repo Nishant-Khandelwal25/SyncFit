@@ -16,7 +16,7 @@ fun WorkoutsRootView(viewModel: WorkoutsViewModel, navigator: Navigator) {
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is WorkoutsUiEvent.LaunchWorkoutScreen -> {
-                navigator.navigate(Routes.WorkoutInformation(event.workoutName))
+                navigator.navigate(Routes.WorkoutInformation(event.workoutName, event.exerciseValue))
             }
         }
     }

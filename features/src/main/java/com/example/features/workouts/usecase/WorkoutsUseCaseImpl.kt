@@ -9,7 +9,7 @@ class WorkoutsUseCaseImpl @Inject constructor() : WorkoutsUseCase {
         return buildList {
             add(
                 WorkoutInfo(
-                    exerciseName = "Barbell Squats",
+                    exerciseName = "Squat",
                     bodyPart = "Legs",
                     exerciseType = ExerciseType.SQUAT,
                 ),
@@ -30,9 +30,9 @@ class WorkoutsUseCaseImpl @Inject constructor() : WorkoutsUseCase {
             )
             add(
                 WorkoutInfo(
-                    exerciseName = "Dumbbell Lateral Raise",
+                    exerciseName = "Lateral Raise",
                     bodyPart = "Shoulders",
-                    exerciseType = ExerciseType.DUMBBELL_LATERAL_RAISE,
+                    exerciseType = ExerciseType.LATERAL_RAISE,
                 ),
             )
             add(

@@ -25,7 +25,7 @@ fun HomeScreenRootView(viewModel: HomeScreenViewModel, navigator: Navigator) {
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is HomeScreenUiEvent.LaunchAIFormCheck -> {
-                navigator.navigate(Routes.AIFormCheck)
+                navigator.navigate(Routes.AIFormCheck(event.exerciseName))
             }
 
             is HomeScreenUiEvent.RequestHealthPermissions -> {

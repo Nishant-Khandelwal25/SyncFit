@@ -4,7 +4,7 @@ enum class ExerciseType {
     SQUAT,
     BICEP_CURL,
     DEADLIFT,
-    DUMBBELL_LATERAL_RAISE,
+    LATERAL_RAISE,
     FLAT_CHEST_PRESS,
     INCLINE_CHEST_PRESS,
     LEG_PRESS,

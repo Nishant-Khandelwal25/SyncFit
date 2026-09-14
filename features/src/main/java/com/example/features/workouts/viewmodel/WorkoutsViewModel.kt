@@ -33,7 +33,7 @@ class WorkoutsViewModel @Inject constructor(
     override fun handleAction(action: WorkoutsUiAction) {
         when (action) {
             is WorkoutsUiAction.OnWorkoutClick -> {
-                sendEvent { WorkoutsUiEvent.LaunchWorkoutScreen(action.workoutType) }
+                sendEvent { WorkoutsUiEvent.LaunchWorkoutScreen(action.exerciseName, action.exerciseType) }
             }
         }
     }
@@ -43,7 +43,7 @@ class WorkoutsViewModel @Inject constructor(
             ExerciseType.SQUAT -> R.drawable.barbell_squat
             ExerciseType.BICEP_CURL -> R.drawable.bicep_curl
             ExerciseType.DEADLIFT -> R.drawable.deadlift
-            ExerciseType.DUMBBELL_LATERAL_RAISE -> R.drawable.dumbbell_lateral_raise
+            ExerciseType.LATERAL_RAISE -> R.drawable.dumbbell_lateral_raise
             ExerciseType.FLAT_CHEST_PRESS -> R.drawable.flat_chest_press
             ExerciseType.INCLINE_CHEST_PRESS -> R.drawable.incline_chest_press
             ExerciseType.LEG_PRESS -> R.drawable.leg_press
@@ -51,6 +51,6 @@ class WorkoutsViewModel @Inject constructor(
             ExerciseType.TRICEP_EXTENSION -> R.drawable.straight_bar_tricep_extension
         }
 
-        return ExerciseUiInfo(exerciseName, bodyPart, resId)
+        return ExerciseUiInfo(exerciseName, bodyPart, resId, exerciseType)
     }
 }

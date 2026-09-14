@@ -18,9 +18,11 @@ import com.example.syncfit_core.localRepository.SyncFitDBRepository
 import com.example.syncfit_core.localRepository.SyncFitDBRepositoryImpl
 import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepository
 import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepositoryImpl
+import com.example.syncfit_core.room.dao.ExerciseInfoDao
 import com.example.syncfit_core.room.dao.ExerciseSessionDao
 import com.example.syncfit_core.room.db.ExerciseSessionDB
 import com.example.syncfit_core.room.migration.Migration.MIGRATION_1_2
+import com.example.syncfit_core.room.migration.Migration.MIGRATION_2_3
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -55,13 +57,19 @@ object SyncFitCoreHiltModule {
     @Singleton
     fun provideExerciseSessionDB(@ApplicationContext context: Context): ExerciseSessionDB {
         return Room.databaseBuilder(context, ExerciseSessionDB::class.java, EXERCISE_SESSION_DB)
-            .addMigrations(MIGRATION_1_2).build()
+            .addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3).build()
     }
 
     @Provides
     @Singleton
     fun getExerciseSessionDao(database: ExerciseSessionDB): ExerciseSessionDao {
         return database.exerciseSessionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun getExerciseInfoDao(database: ExerciseSessionDB): ExerciseInfoDao {
+        return database.exerciseInfoDao()
     }
 
     @Provides
@@ -108,6 +116,6 @@ object SyncFitCoreHiltModule {
 
     @Provides
     @Singleton
-    fun provideNetworkRepository(apiService: ApiService, gson: Gson): ExerciseInfoRepository =
-        ExerciseInfoRepositoryImpl(apiService, gson)
+    fun provideNetworkRepository(apiService: ApiService, gson: Gson, dao: ExerciseInfoDao): ExerciseInfoRepository =
+        ExerciseInfoRepositoryImpl(apiService, gson, dao)
 }

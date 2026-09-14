@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.example.features.R
 import com.example.features.workouts.model.ExerciseUiInfo
 import com.example.features.workouts.viewmodel.WorkoutsUiAction
+import com.example.syncfit_core.room.model.ExerciseType
 import com.example.syncfit_core.ui.components.SyncFitCard
 import com.example.syncfit_core.ui.theme.IconSize
 import com.example.syncfit_core.ui.theme.IconSize.xxxxl
@@ -28,7 +29,7 @@ fun WorkoutItem(exerciseInfo: ExerciseUiInfo, onAction: (WorkoutsUiAction) -> Un
         endIconTopPadding = 0.dp,
         endIconSize = IconSize.sm,
     ) {
-        onAction(WorkoutsUiAction.OnWorkoutClick(exerciseInfo.exerciseName))
+        onAction(WorkoutsUiAction.OnWorkoutClick(exerciseInfo.exerciseName, exerciseInfo.exerciseType.name))
     }
 }
 
@@ -41,6 +42,7 @@ private fun WorkoutItemPreview() {
                 "Barbell Squats",
                 "Legs",
                 R.drawable.barbell_squat,
+                ExerciseType.SQUAT,
             ),
         ) {}
     }

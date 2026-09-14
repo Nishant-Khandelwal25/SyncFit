@@ -5,6 +5,7 @@ import com.example.features.home.model.HomeScreenData
 import com.example.features.home.usecase.HomeScreenUseCase
 import com.example.features.login.usecase.LoginUseCase
 import com.example.syncfit_core.healthconnect.model.HealthConnectAvailability
+import com.example.syncfit_core.room.model.ExerciseType
 import com.example.syncfit_core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -176,7 +177,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun onStartAIFormCheckClick() {
         sendEvent {
-            HomeScreenUiEvent.LaunchAIFormCheck
+            HomeScreenUiEvent.LaunchAIFormCheck(ExerciseType.SQUAT.name)
         }
     }
 }

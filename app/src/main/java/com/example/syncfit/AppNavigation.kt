@@ -21,6 +21,8 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.example.features.aiformcheck.ui.AIFormCheckRootView
 import com.example.features.aiformcheck.viewmodel.AIFormCheckViewModel
+import com.example.features.exerciseinfo.ui.ExerciseInfoRootView
+import com.example.features.exerciseinfo.viewmodel.ExerciseInfoViewModel
 import com.example.features.home.ui.HomeScreenRootView
 import com.example.features.home.viewmodel.HomeScreenViewModel
 import com.example.features.login.ui.LoginRootView
@@ -68,13 +70,14 @@ private fun routeEntryProvider(navigator: Navigator): (NavKey) -> NavEntry<NavKe
             SamplePlaceHolder(R.string.nav_profile)
         }
 
-        Routes.AIFormCheck -> NavEntry(route) {
+        is Routes.AIFormCheck -> NavEntry(route) {
             val viewModel: AIFormCheckViewModel = hiltViewModel()
             AIFormCheckRootView(viewModel)
         }
 
         is Routes.WorkoutInformation -> NavEntry(route) {
-            SamplePlaceHolder(R.string.workout_information_placeholder)
+            val viewModel: ExerciseInfoViewModel = hiltViewModel()
+            ExerciseInfoRootView(viewModel, route.workoutName, route.exerciseValue, navigator)
         }
 
         else -> error("Unknown Route: $route")
