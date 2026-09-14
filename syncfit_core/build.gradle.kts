@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.androidx.room)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.health.connect)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.retrofit.gson)
 
     ksp(libs.android.hilt.compiler)
     testImplementation(libs.junit)

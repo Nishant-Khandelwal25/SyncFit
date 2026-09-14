@@ -6,6 +6,10 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room3.Room
+import com.example.syncfit_core.api.network.ApiService
+import com.example.syncfit_core.api.repository.ExerciseInfoRepository
+import com.example.syncfit_core.api.repository.ExerciseInfoRepositoryImpl
+import com.example.syncfit_core.constants.SyncFitCoreConstants.BASE_URL
 import com.example.syncfit_core.constants.SyncFitCoreConstants.DATA_STORE_KEY
 import com.example.syncfit_core.constants.SyncFitCoreConstants.EXERCISE_SESSION_DB
 import com.example.syncfit_core.healthconnect.repository.HealthConnectRepository
@@ -17,11 +21,17 @@ import com.example.syncfit_core.localRepository.SyncFitStorageLocalRepositoryImp
 import com.example.syncfit_core.room.dao.ExerciseSessionDao
 import com.example.syncfit_core.room.db.ExerciseSessionDB
 import com.example.syncfit_core.room.migration.Migration.MIGRATION_1_2
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -63,4 +73,41 @@ object SyncFitCoreHiltModule {
     @Singleton
     fun provideHealthConnectRepository(@ApplicationContext context: Context): HealthConnectRepository =
         HealthConnectRepositoryImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder().create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(45, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofitInstance(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson)).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkRepository(apiService: ApiService, gson: Gson): ExerciseInfoRepository =
+        ExerciseInfoRepositoryImpl(apiService, gson)
 }

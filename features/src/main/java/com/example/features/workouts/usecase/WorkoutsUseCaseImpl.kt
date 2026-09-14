@@ -1,70 +1,70 @@
 package com.example.features.workouts.usecase
 
-import com.example.features.workouts.model.ExerciseInfo
+import com.example.features.workouts.model.WorkoutInfo
 import com.example.syncfit_core.room.model.ExerciseType
 import javax.inject.Inject
 
 class WorkoutsUseCaseImpl @Inject constructor() : WorkoutsUseCase {
-    override suspend fun getAllWorkouts(): List<ExerciseInfo> {
+    override suspend fun getAllWorkouts(): List<WorkoutInfo> {
         return buildList {
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Barbell Squats",
                     bodyPart = "Legs",
                     exerciseType = ExerciseType.SQUAT,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Bicep Curl",
                     bodyPart = "Arms",
                     exerciseType = ExerciseType.BICEP_CURL,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Deadlift",
                     bodyPart = "Back",
                     exerciseType = ExerciseType.DEADLIFT,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Dumbbell Lateral Raise",
                     bodyPart = "Shoulders",
                     exerciseType = ExerciseType.DUMBBELL_LATERAL_RAISE,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Flat Chest Press",
                     bodyPart = "Chest",
                     exerciseType = ExerciseType.FLAT_CHEST_PRESS,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Incline Chest Press",
                     bodyPart = "Chest",
                     exerciseType = ExerciseType.INCLINE_CHEST_PRESS,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Leg Press",
                     bodyPart = "Legs",
                     exerciseType = ExerciseType.LEG_PRESS,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Shoulder Press",
                     bodyPart = "Shoulders",
                     exerciseType = ExerciseType.SHOULDER_PRESS,
                 ),
             )
             add(
-                ExerciseInfo(
+                WorkoutInfo(
                     exerciseName = "Tricep Extension",
                     bodyPart = "Arms",
                     exerciseType = ExerciseType.TRICEP_EXTENSION,

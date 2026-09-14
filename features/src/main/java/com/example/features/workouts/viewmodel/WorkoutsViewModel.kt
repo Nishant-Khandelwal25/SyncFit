@@ -1,8 +1,8 @@
 package com.example.features.workouts.viewmodel
 
 import com.example.features.R
-import com.example.features.workouts.model.ExerciseInfo
 import com.example.features.workouts.model.ExerciseUiInfo
+import com.example.features.workouts.model.WorkoutInfo
 import com.example.features.workouts.usecase.WorkoutsUseCase
 import com.example.syncfit_core.room.model.ExerciseType
 import com.example.syncfit_core.viewmodel.BaseViewModel
@@ -38,7 +38,7 @@ class WorkoutsViewModel @Inject constructor(
         }
     }
 
-    private fun ExerciseInfo.toUiModel(): ExerciseUiInfo {
+    private fun WorkoutInfo.toUiModel(): ExerciseUiInfo {
         val resId = when (exerciseType) {
             ExerciseType.SQUAT -> R.drawable.barbell_squat
             ExerciseType.BICEP_CURL -> R.drawable.bicep_curl
