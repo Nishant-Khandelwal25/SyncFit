@@ -7,11 +7,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun SyncFitResourceImage(modifier: Modifier = Modifier, resId: Int, contentDescription: String = "") {
+fun SyncFitResourceImage(
+    modifier: Modifier = Modifier,
+    resId: Int,
+    contentDescription: String = "",
+    contentScale: ContentScale = ContentScale.Fit,
+) {
     Image(
         painter = painterResource(resId),
         contentDescription = contentDescription,
         modifier = modifier,
-        contentScale = ContentScale.Fit,
+        contentScale = contentScale,
     )
 }

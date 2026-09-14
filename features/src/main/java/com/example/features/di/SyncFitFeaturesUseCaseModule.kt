@@ -2,6 +2,8 @@ package com.example.features.di
 
 import com.example.features.aiformcheck.domain.usecase.AiFormCheckUseCase
 import com.example.features.aiformcheck.domain.usecase.AiFormCheckUseCaseImpl
+import com.example.features.exerciseinfo.usecase.ExerciseInfoUseCase
+import com.example.features.exerciseinfo.usecase.ExerciseInfoUseCaseImpl
 import com.example.features.healthconnect.HealthConnectUseCase
 import com.example.features.healthconnect.HealthConnectUseCaseImpl
 import com.example.features.home.usecase.HomeScreenUseCase
@@ -42,4 +44,7 @@ interface SyncFitFeaturesUseCaseModule {
 
     @Binds
     fun bindWorkoutsUseCase(impl: WorkoutsUseCaseImpl): WorkoutsUseCase
+
+    @Binds
+    fun bindExerciseInfoUseCase(impl: ExerciseInfoUseCaseImpl): ExerciseInfoUseCase
 }

@@ -21,8 +21,8 @@ sealed interface Routes : NavKey {
     data object Profile : Routes
 
     @Serializable
-    data object AIFormCheck : Routes
+    data class AIFormCheck(val workoutName: String) : Routes
 
     @Serializable
-    data class WorkoutInformation(val workoutName: String) : Routes
+    data class WorkoutInformation(val workoutName: String, val exerciseValue: String) : Routes
 }

@@ -26,3 +26,8 @@ object BorderWidth {
     val md = 2.dp
     val lg = 4.dp
 }
+
+object ToolbarHeight {
+    val collapsedHeight = 60.dp
+    val expandedHeight = 106.dp
+}

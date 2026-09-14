@@ -1,6 +1,6 @@
-package com.example.syncfit_core.api.model
+package com.example.syncfit_core.api.model.result
 
-data class ExerciseInfo(
+data class ExerciseInfoResult(
     val id: Int,
     val exerciseName: String,
     val exerciseVariations: List<String>,
