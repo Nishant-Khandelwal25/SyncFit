@@ -6,7 +6,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.example.features.R
 import com.example.features.workouts.viewmodel.WorkoutsUiAction
 import com.example.features.workouts.viewmodel.WorkoutsUiState
 import com.example.syncfit_core.ui.components.SyncFitText
@@ -29,8 +31,21 @@ fun WorkoutsInformation(state: WorkoutsUiState, onAction: (WorkoutsUiAction) -> 
             }
         }
 
+        state.exercisesData.isEmpty() -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                SyncFitText(
+                    text = stringResource(R.string.no_exercises_available),
+                    textStyle = SyncFitTypography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
+
         else -> {
-            WorkoutsList(state.exercisedData, onAction)
+            WorkoutsList(state.exercisesData, onAction)
         }
     }
 }

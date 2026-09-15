@@ -33,4 +33,19 @@ object Migration {
             )
         }
     }
+
+    val MIGRATION_3_4 = object : Migration(3, 4) {
+        override suspend fun migrate(connection: SQLiteConnection) {
+            connection.execSQL(
+                """CREATE TABLE IF NOT EXISTS exercises_list (
+                    id INTEGER NOT NULL PRIMARY KEY,
+                    exerciseName TEXT NOT NULL,
+                    bodyPart TEXT NOT NULL,
+                    exerciseType TEXT NOT NULL,
+                    lastUpdatedMillis INTEGER NOT NULL
+                    )
+            """.trimMargin(),
+            )
+        }
+    }
 }
