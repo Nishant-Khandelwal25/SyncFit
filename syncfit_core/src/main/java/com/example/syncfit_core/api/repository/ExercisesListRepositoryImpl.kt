@@ -1,55 +1,57 @@
 package com.example.syncfit_core.api.repository
 
-import com.example.syncfit_core.api.mapper.toExerciseCacheKey
-import com.example.syncfit_core.api.mapper.toExerciseInfoApiResult
-import com.example.syncfit_core.api.mapper.toExerciseInfoEntity
-import com.example.syncfit_core.api.mapper.toExerciseInfoResult
-import com.example.syncfit_core.api.model.response.ExerciseInfoApiResponse
-import com.example.syncfit_core.api.model.result.ExerciseInfoResult
+import com.example.syncfit_core.api.mapper.toExercisesListApiResult
+import com.example.syncfit_core.api.mapper.toExercisesListEntity
+import com.example.syncfit_core.api.mapper.toWorkoutInfoResult
+import com.example.syncfit_core.api.model.response.ExercisesListApiResponse
+import com.example.syncfit_core.api.model.result.WorkoutInfoResult
 import com.example.syncfit_core.api.network.ApiService
 import com.example.syncfit_core.api.network.RefreshResult
-import com.example.syncfit_core.room.dao.ExerciseInfoDao
+import com.example.syncfit_core.room.dao.ExercisesListDao
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 import retrofit2.Response
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class ExerciseInfoRepositoryImpl @Inject constructor(
+class ExercisesListRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val gson: Gson,
-    private val dao: ExerciseInfoDao,
-) : ExerciseInfoRepository {
-    override fun observeExerciseInfo(exerciseName: String): Flow<ExerciseInfoResult?> {
-        return dao.observeExerciseInfo(exerciseName.toExerciseCacheKey()).map { entity ->
-            entity?.toExerciseInfoResult()
+    private val dao: ExercisesListDao,
+) : ExercisesListRepository {
+    override fun observeExercisesList(): Flow<List<WorkoutInfoResult>> {
+        return dao.observeExercisesList().map {
+            it.map { exerciseItem ->
+                exerciseItem.toWorkoutInfoResult()
+            }
         }
     }
 
-    override suspend fun refreshExerciseInfo(exerciseName: String): RefreshResult {
+    override suspend fun refreshExercisesList(): RefreshResult {
         return try {
-            val response = apiService.getExerciseInfo(exerciseName)
-            val apiResult = response.body().toExerciseInfoApiResult()
-            val exerciseInfo = apiResult.exerciseInfo
+            val response = apiService.getExercises()
+            val apiResult = response.body().toExercisesListApiResult()
+            val exercisesList = apiResult.exercisesList
+
             when {
-                response.isSuccessful && apiResult.success &&
-                    exerciseInfo != null -> {
-                    dao.upsertExerciseInfo(exerciseInfo.toExerciseInfoEntity(exerciseName))
+                response.isSuccessful && apiResult.success && exercisesList != null -> {
+                    val exercisesListEntity = exercisesList.map { it.toExercisesListEntity() }
+                    dao.replaceExercisesList(exercisesListEntity)
                     RefreshResult.Success
                 }
 
                 response.isSuccessful -> {
-                    RefreshResult.Error(apiResult.message.ifBlank { "Exercise information is unavailable." })
+                    RefreshResult.Error(apiResult.message.ifBlank { "Exercises List information is unavailable." })
                 }
 
                 else -> {
                     RefreshResult.Error(
                         getApiErrorMessage(response) ?: response.message()
-                            .ifBlank { "Unable to refresh exercise information." },
+                            .ifBlank { "Unable to refresh exercises list information." },
                     )
                 }
             }
@@ -71,7 +73,7 @@ class ExerciseInfoRepositoryImpl @Inject constructor(
             runCatching {
                 gson.fromJson(
                     errorBody.charStream(),
-                    ExerciseInfoApiResponse::class.java,
+                    ExercisesListApiResponse::class.java,
                 ).message
             }.getOrNull()
         }
